@@ -26,28 +26,31 @@ mutable struct Present_image
 end
 
 function Present_image(binimg, gsimg)
-    prefs = Dict(:color=>"red",
-                 :bin_opacity=>0.5,
+    prefs = Dict(:color=>color,
+                 :bin_opacity=>bin_opacity,
                 )
     state = Dict()
     Present_image(binimg, gsimg, Node(:div), Node(:div), prefs, state)
 end
 
-function updatebin(present_image::Present_image)
-    present_image.node_bin = RGBA{N0f8}(bin_colormap(present_image.prefs[:color],
-                                                     present_image.prefs[:bin_opacity],
-                                                    ).(present_image.img_bin))
-end
 
-function updatebin(present_image::Present_image)
+function gen_bin(present_image::Present_image, img_bin = present_image.img.bin)
     colorized = (x-> RGBA{N0f8}(bin_colormap(present_image.prefs[:color],
                                              present_image.prefs[:bin_opacity],
-                                            )(x)...)).(present_image.img_bin)
-    present_image.node_bin = Node(:div, WebIO.render(colorized), style=topstyle)
+                                            )(x)...)).(img_bin)
+    Node(:div, WebIO.render(colorized), style=topstyle)
 end
 
-function updategs(present_image::Present_image)
-    present_image.node_gs = Node(:div, WebIO.render(present_image.img_gs), style=bgstyle)
+function update_bin!(present_image::Present_image)
+    present_image.node_bin = gen_bin(present_image)
+end
+
+function gen_gs(present_image::Present_image)
+    Node(:div, WebIO.render(present_image.img_gs), style=bgstyle)
+end
+
+function update_gs!(present_image::Present_image)
+    present_image.node_gs = gen_gs(present_image)
 end
 
 function update(present_image::Present_image)
