@@ -14,19 +14,18 @@ tdefault = otsu_threshold(grimg)
 bimg = (grimg .< tdefault)
 presenter = Present_image(bimg, grimg)
 
-thresholds = Dict(zip(0:0.01:1, Node(:div)))
-for i in keys(thresholds)
-    @async (thresholds[i] = gen_bin(presenter, presenter.img_gs .< i), println("$i done"))
+update(presenter)
+
+ks = 0:0.01:1
+thresholds = Dict(zip(ks, (x->Node(:div)).(ks)))
+@async (for i in keys(thresholds)
+    thresholds[i] = gen_bin(presenter, presenter.img_gs .< i); println("$i done")
+end)
+
+layout = @manipulate for tv in slider(0.0:0.01:1.0, value=round(float64(tdefault.val), 2))
+    @async update_bin!(presenter, thresholds[tv])
+    Node(:div, presenter(), style=Dict(:bottom=>"-400px"))
 end
 
-layout = @manipulate for tv in slider(0.0:0.01:1.0)
-
-    update_bin!(presenter)
-    Node(:div, presenter(), style=Dict(:bottom=>"-200px"))
-end
-
-on(observe(tv)) do val
-    println(time()%100)
-end
 
 webio_serve(page("/", req->layout), port)

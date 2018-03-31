@@ -45,12 +45,20 @@ function update_bin!(present_image::Present_image)
     present_image.node_bin = gen_bin(present_image)
 end
 
+function update_bin!(present_image::Present_image, new::WebIO.Node)
+    present_image.node_bin = new
+end
+
 function gen_gs(present_image::Present_image)
     Node(:div, WebIO.render(present_image.img_gs), style=bgstyle)
 end
 
 function update_gs!(present_image::Present_image)
     present_image.node_gs = gen_gs(present_image)
+end
+
+function update_gs!(present_image::Present_image, new::WebIO.Node)
+    present_image.node_gs = new
 end
 
 function update(present_image::Present_image)
