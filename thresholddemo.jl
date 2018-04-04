@@ -17,13 +17,12 @@ presenter = Present_image(bimg, grimg)
 update(presenter)
 
 ks = 0:0.01:1
-thresholds = Dict(zip(ks, (x->Node(:div)).(ks)))
-@async (for i in keys(thresholds)
-            thresholds[i] = gen_bin(presenter, presenter.img_gs .< i)
-end)
 
-layout = @manipulate for tv in slider(0.0:0.01:1.0, value=round(float64(tdefault.val), 2))
-    @async update_bin!(presenter, thresholds[tv])
+layout = @manipulate for tv in slider(ks, value=[0.0, round(float64(tdefault.val), 2)])
+    img_high = tv[1] .< presenter.img_gs
+    img_low = presenter.img_gs .< tv[2]
+    presenter.img_bin =  (img_high .& img_low)
+    update_bin!(presenter)
     Node(:div, presenter(), style=Dict(:bottom=>"-400px"))
 end
 
