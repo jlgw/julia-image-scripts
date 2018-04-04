@@ -34,7 +34,7 @@ function Present_image(binimg, gsimg)
 end
 
 
-function gen_bin(present_image::Present_image, img_bin = present_image.img.bin)
+function gen_bin(present_image::Present_image, img_bin = present_image.img_bin)
     colorized = (x-> RGBA{N0f8}(bin_colormap(present_image.prefs[:color],
                                              present_image.prefs[:bin_opacity],
                                             )(x)...)).(img_bin)
@@ -62,8 +62,8 @@ function update_gs!(present_image::Present_image, new::WebIO.Node)
 end
 
 function update(present_image::Present_image)
-    updategs(present_image)
-    updatebin(present_image)
+    update_gs!(present_image)
+    update_bin!(present_image)
 end
 
 function (present_image::Present_image)()
