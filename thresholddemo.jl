@@ -19,7 +19,7 @@ update(presenter)
 ks = 0:0.01:1
 thresholds = Dict(zip(ks, (x->Node(:div)).(ks)))
 @async (for i in keys(thresholds)
-    thresholds[i] = gen_bin(presenter, presenter.img_gs .< i); println("$i done")
+            thresholds[i] = gen_bin(presenter, presenter.img_gs .< i)
 end)
 
 layout = @manipulate for tv in slider(0.0:0.01:1.0, value=round(float64(tdefault.val), 2))

@@ -35,9 +35,8 @@ end
 
 
 function gen_bin(present_image::Present_image, img_bin = present_image.img_bin)
-    colorized = (x-> RGBA{N0f8}(bin_colormap(present_image.prefs[:color],
-                                             present_image.prefs[:bin_opacity],
-                                            )(x)...)).(img_bin)
+    colormap = bin_colormap(present_image.prefs[:color], present_image.prefs[:bin_opacity])
+    colorized = (x-> RGBA{N0f8}(colormap(x)...)).(img_bin)
     Node(:div, WebIO.render(colorized), style=topstyle)
 end
 
