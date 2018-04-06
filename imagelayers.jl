@@ -2,9 +2,9 @@ using WebIO, Images
 const color = "red"
 const bin_opacity = 0.5
 
-const bgstyle   = Dict(:width=>"100%", :height=>"100%", :bottom=>"0", :right=>"0", :position=>"absolute")
-const topstyle  = Dict(:width=>"100%", :height=>"100%", :bottom=>"0", :right=>"0", :position=>"absolute")
-const contstyle = Dict(:position=>"relative", :display=>"inline")
+const bgstyle   = Dict(:width=>"100%", :height=>"100%", :top=>"0", :left=>"0", :position=>"absolute")
+const topstyle  = Dict(:width=>"100%", :height=>"100%", :top=>"0", :left=>"0", :position=>"absolute")
+const contstyle = Dict(:position=>"relative")
 
 function bin_colormap(color, opacity)
     if color=="red"
@@ -66,7 +66,8 @@ function update(present_image::Present_image)
 end
 
 function (present_image::Present_image)()
-    Node(:div, present_image.node_gs, present_image.node_bin, style=contstyle)
+    tmpstyle = Dict(:height=>"$(height(present_image.img_bin))",
+                    :width=>"$(width(present_image.img_bin))")
+    Node(:div, present_image.node_gs, present_image.node_bin, style=merge(tmpstyle, 
+                                                                          contstyle))
 end
-
-
